@@ -1,0 +1,66 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+// The main method must be in a class named "Main".
+class Main {
+    static int N, M;
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        M = Integer.parseInt(br.readLine());
+
+        Student[] students = new Student[101];
+        List<Student> finalList = new ArrayList<>();
+
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for(int i = 0 ; i < M ; i++) {
+            int snum = Integer.parseInt(st.nextToken());
+
+            // 이미 형성된 학생
+            if(students[snum] != null) {
+                students[snum].vote++;
+            } else { // 형성된 적 없는 학생
+
+                Collections.sort(finalList); // 정렬 
+
+                if(finalList.size() == N) { // 가득차있다면
+                    Student del = finalList.remove(N-1); // 가장 오래된 경우 제거
+                    students[del.studentNum] = null;
+                }
+                
+                students[snum] = new Student(snum,1,i);
+                finalList.add(students[snum]);
+            }
+        }
+
+        Collections.sort(finalList, (o1, o2) -> o1.studentNum - o2.studentNum);
+        for(Student s : finalList) {
+            System.out.print(s.studentNum + " ");
+        }
+    }
+}
+
+
+class Student implements Comparable<Student> {
+        int studentNum;
+        int vote;
+        int recent;
+    
+        public Student(int studentNum, int vote, int recent) {
+            this.studentNum = studentNum;
+            this.vote = vote;
+            this.recent = recent;
+        }
+    
+        @Override
+        public int compareTo(Student s2) {
+            int resultVote = s2.vote - vote;
+            if(resultVote == 0) { // 투표 수가 같은 경우
+                return s2.recent - recent; // 최신 투표가 먼저 오도록
+            }
+    
+            return resultVote;
+        }
+    }
