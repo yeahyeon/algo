@@ -1,0 +1,80 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+// The main method must be in a class named "Main".
+class Main {
+    static int N;
+    static char[][] candy;
+    static int max = 1;
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+        candy = new char[N][N];
+        
+        for(int i = 0 ; i < N ; i++) {
+            String line = br.readLine();
+            for(int j = 0 ; j < N ; j++) {
+                candy[i][j] = line.charAt(j);
+            }
+        }
+
+        // 행 기준으로 사탕 변경
+        for(int i = 0 ; i < N ; i++) {
+            for(int j = 0 ; j < N-1 ; j++) {
+                change(i, j, i, j+1);
+                count();
+                change(i, j , i, j+1);
+            }
+        }
+
+        // 열 기준으로 사탕 변경
+        for(int i = 0 ; i < N-1 ; i++) {
+            for(int j = 0 ; j < N ; j++) {
+                change(i, j, i+1, j);
+                count();
+                change(i, j, i+1, j);
+            }
+        }
+
+        System.out.println(max);
+        
+    }
+
+    public static void change(int i1, int j1, int i2, int j2) {
+        char temp = candy[i1][j1];
+        candy[i1][j1] = candy[i2][j2];
+        candy[i2][j2] = temp;
+    }
+
+    public static void count() {
+        // 행에서 찾기
+        for(int i = 0 ; i < N ; i++) {
+            int cnt = 1;
+
+            for(int j = 0 ; j < N-1 ; j++) {
+                if(candy[i][j] == candy[i][j+1]) {
+                    cnt++;
+                    max = Math.max(cnt, max);
+                } else {
+                    cnt = 1;
+                }
+            }
+        }
+
+        // 열에서 찾기
+        for(int i = 0 ; i < N ; i++) {
+            int cnt = 1;
+
+            for(int j = 0 ; j < N-1 ; j++) {
+                if(candy[j][i] == candy[j+1][i]) {
+                    cnt++;
+                    max = Math.max(cnt, max);
+                } else {
+                    cnt = 1;
+                }
+            }
+        }
+    }
+}
