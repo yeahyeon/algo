@@ -1,0 +1,42 @@
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+// The main method must be in a class named "Main".
+class Main {
+    static int N, M;
+    static int[][] map;
+    static int max = 1;
+    
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        map = new int[N][M];
+
+        for(int i = 0 ; i < N ; i++) {
+            String line = br.readLine();
+            for(int j = 0 ; j < M ; j++) {
+                map[i][j] = line.charAt(j) - '0';
+            }
+        }
+
+        int minL = Math.min(N, M);
+        for(int l = 0 ; l < minL ; l++) { // 가능한 정사각형 변의 길이
+            for(int i = 0 ; i < N-l ; i++) { // 행
+                for(int j = 0 ; j < M-l; j++) { // 열
+                    if(map[i][j] == map[i+l][j]
+                       && map[i][j] == map[i][j+l]
+                       && map[i][j] == map[i+l][j+l]) { // 세 꼭짓점 비교
+                        max = Math.max(max, (l+1)*(l+1)); // 같으면 max 갱신
+                    }
+                }
+            }
+        }
+
+        System.out.println(max);
+        
+        
+    }
+}
